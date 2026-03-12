@@ -3,138 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتب استشارات الأعمال وريادة المشاريع</title>
+    <title>Aitchikh Consulting</title>
     <!-- خطوط جوجل (Cairo) -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
     <!-- أيقونات FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* المتغيرات (Colors) */
         :root {
-            --primary: #0a2540; /* أزرق داكن */
-            --secondary: #d4af37; /* ذهبي */
+            --primary: #0a2540; 
+            --secondary: #d4af37; 
             --bg-color: #f8f9fa;
             --text-color: #333;
             --white: #ffffff;
-            --transition: all 0.3s ease;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; scroll-behavior: smooth; }
+        html[dir="ltr"] body { text-align: left; }
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; }
-        .container { max-width: 1200px; margin: auto; padding: 0 20px; }
-        .section-title { text-align: center; font-size: 2.5rem; color: var(--primary); margin-bottom: 40px; }
-        .section-title::after { content: ''; display: block; width: 80px; height: 4px; background: var(--secondary); margin: 10px auto; }
-        section { padding: 80px 0; }
+        .container { max-width: 1200px; margin: auto; padding: 0 20px; position: relative; z-index: 2;}
+        .section-title { text-align: center; font-size: 2.5rem; color: var(--primary); margin-bottom: 40px; font-weight: 900;}
+        .section-title::after { content: ''; display: block; width: 80px; height: 4px; background: var(--secondary); margin: 10px auto; border-radius: 2px;}
+        section { padding: 80px 0; position: relative; }
 
         /* الأزرار */
         .btn-glow {
             background: var(--secondary); color: var(--primary); font-weight: bold; font-size: 1.2rem;
-            padding: 15px 35px; border: none; border-radius: 30px; cursor: pointer;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); transition: var(--transition);
+            padding: 15px 40px; border: none; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); transition: var(--transition);
         }
-        .btn-glow:hover { box-shadow: 0 0 25px rgba(212, 175, 55, 0.9); transform: scale(1.05); }
+        .btn-glow:hover { box-shadow: 0 0 25px rgba(212, 175, 55, 0.9); transform: translateY(-3px) scale(1.05); }
 
         /* شريط التنقل */
-        header { background: var(--primary); color: var(--white); position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header { background: rgba(10, 37, 64, 0.95); backdrop-filter: blur(10px); color: var(--white); position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; max-width: 1200px; margin: auto; }
-        .logo { font-size: 1.8rem; font-weight: 900; color: var(--secondary); }
-        .nav-links { display: flex; gap: 20px; }
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px;}
+        .logo span { color: var(--white); font-weight: 300;}
+        .nav-links { display: flex; gap: 20px; align-items: center;}
         .nav-links a:hover { color: var(--secondary); }
+        .lang-btn { background: transparent; border: 1px solid var(--secondary); color: var(--secondary); padding: 5px 15px; border-radius: 20px; cursor: pointer; transition: 0.3s;}
+        .lang-btn:hover { background: var(--secondary); color: var(--primary); }
 
-        /* الصفحة الرئيسية (Hero) */
-        .hero {
-            height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center;
-            background: linear-gradient(rgba(10, 37, 64, 0.8), rgba(10, 37, 64, 0.8)), url('https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1920&q=80') center/cover;
-            color: var(--white); transition: background 1s ease-in-out; margin-top: 0;
-        }
-        .hero h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-        .hero p { font-size: 1.5rem; margin-bottom: 30px; }
+        /* ====== السلايدر السينمائي (Hero) ====== */
+        .hero { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--white); overflow: hidden; margin-top: 0; }
+        .slider-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: var(--primary);}
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 1.5s ease-in-out; }
+        .slide.active { opacity: 1; z-index: 1; }
+        .slide-bg { width: 100%; height: 100%; background-size: cover; background-position: center; transform: scale(1.1); transition: transform 6s linear; }
+        .slide.active .slide-bg { transform: scale(1); } /* تأثير الزووم البطيء */
+        .hero-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(10, 37, 64, 0.7); z-index: 1;}
+        .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 20px; opacity: 0; transform: translateY(30px); transition: all 1s ease 0.5s;}
+        .slide.active + .hero-overlay + .hero-content, .hero-content.show { opacity: 1; transform: translateY(0); }
+        
+        .hero h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); font-weight: 900;}
+        .hero p { font-size: 1.5rem; margin-bottom: 40px; font-weight: 300; }
 
-        /* نموذج الاستشارة (Popup Modal) */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        .modal-content { background: var(--white); margin: 5% auto; padding: 30px; border-radius: 15px; width: 90%; max-width: 600px; animation: slideDown 0.4s; }
-        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .close { float: left; font-size: 28px; font-weight: bold; color: #aaa; cursor: pointer; }
-        .close:hover { color: red; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary); }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem;
-        }
-        .submit-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; width: 100%; border-radius: 5px; font-size: 1.1rem; cursor: pointer; transition: 0.3s; }
-        .submit-btn:hover { background: var(--secondary); color: var(--primary); }
-
+        /* البطاقات العامة */
+        .grid-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card { background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: var(--transition); border: 1px solid rgba(0,0,0,0.02);}
+        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        
         /* الخدمات */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .service-card { background: var(--white); padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: var(--transition); border-bottom: 4px solid transparent; }
-        .service-card:hover { transform: translateY(-10px); border-bottom: 4px solid var(--secondary); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .service-card i { font-size: 3rem; color: var(--secondary); margin-bottom: 20px; }
-        .service-card h3 { color: var(--primary); margin-bottom: 15px; }
+        .service-card { padding: 40px 30px; text-align: center; border-bottom: 4px solid transparent; }
+        .service-card:hover { border-bottom: 4px solid var(--secondary); }
+        .service-card i { font-size: 3.5rem; color: var(--secondary); margin-bottom: 20px; transition: transform 0.3s; }
+        .service-card:hover i { transform: scale(1.2); }
+        .service-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.5rem;}
 
-        /* الأعمال والمشاريع */
-        .gallery-grid, .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .gallery-item, .project-card { background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .gallery-item img, .project-card img { width: 100%; height: 200px; object-fit: cover; transition: var(--transition); }
-        .gallery-item:hover img { transform: scale(1.1); }
-        .gallery-info, .project-info { padding: 20px; }
-        .gallery-info h4, .project-info h4 { color: var(--primary); }
-        .project-results { background: rgba(212, 175, 55, 0.1); padding: 10px; margin-top: 10px; border-radius: 5px; border-right: 3px solid var(--secondary); font-size: 0.9rem;}
+        /* المشاريع والأعمال */
+        .img-card img { width: 100%; height: 220px; object-fit: cover; transition: var(--transition); }
+        .img-card:hover img { transform: scale(1.05); }
+        .card-info { padding: 25px; }
+        .card-info h4 { color: var(--primary); font-size: 1.3rem; margin-bottom: 10px;}
+        .badge { background: rgba(212, 175, 55, 0.1); color: var(--secondary); padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold;}
 
         /* الشركاء */
-        .partners-wrap { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
-        .partner-logo { width: 120px; height: 120px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden;}
-        .partner-logo img { max-width: 80%; max-height: 80%; }
+        .partners-wrap { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; align-items: center;}
+        .partner-logo { width: 150px; height: 100px; background: var(--white); display: flex; align-items: center; justify-content: center; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); filter: grayscale(100%); transition: var(--transition); padding: 15px;}
+        .partner-logo:hover { filter: grayscale(0%); transform: scale(1.05); }
+        .partner-logo img { max-width: 100%; max-height: 100%; object-fit: contain;}
 
         /* الإحصائيات */
-        .stats-section { background: var(--primary); color: var(--white); text-align: center; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
+        .stats-section { background: var(--primary); color: var(--white); text-align: center; padding: 60px 0;}
         .stat-box i { font-size: 3rem; color: var(--secondary); margin-bottom: 15px; }
-        .stat-box h2 { font-size: 3rem; font-weight: 900; }
+        .stat-box h2 { font-size: 3.5rem; font-weight: 900; margin-bottom: 5px;}
 
         /* من نحن والاتصال */
-        .about-flex, .contact-flex { display: flex; gap: 40px; flex-wrap: wrap; align-items: center; }
-        .about-text, .contact-form { flex: 1; min-width: 300px; }
-        .about-img, .contact-map { flex: 1; min-width: 300px; border-radius: 10px; overflow: hidden; }
-        .about-img img { width: 100%; border-radius: 10px; }
+        .flex-wrap { display: flex; gap: 50px; flex-wrap: wrap; align-items: center; }
+        .flex-half { flex: 1; min-width: 300px; }
+        .about-img img { width: 100%; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .form-control { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; transition: 0.3s; background: #fafafa;}
+        .form-control:focus { border-color: var(--secondary); outline: none; background: #fff;}
+        .submit-btn { background: var(--primary); color: white; border: none; padding: 15px 20px; width: 100%; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: 0.3s; font-weight: bold;}
+        .submit-btn:hover { background: var(--secondary); color: var(--primary); }
 
         /* الفوتر */
-        footer { background: #051626; color: white; padding: 40px 0 20px; text-align: center; }
-        .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
-        .socials i { font-size: 1.5rem; margin: 0 10px; cursor: pointer; transition: 0.3s; }
+        footer { background: #051626; color: white; padding: 50px 0 20px; text-align: center; border-top: 5px solid var(--secondary);}
+        .socials i { font-size: 1.5rem; margin: 0 10px; cursor: pointer; transition: 0.3s; color: #aaa;}
         .socials i:hover { color: var(--secondary); }
 
         /* =========================================
-           لوحة التحكم ADMIN DASHBOARD
+           لوحة التحكم الاحترافية ADMIN CMS
         ========================================= */
-        #admin-panel { display: none; background: #f1f1f1; min-height: 100vh; }
+        #admin-panel, #admin-login { display: none; background: #f4f6f9; min-height: 100vh; color: #333;}
         .admin-layout { display: flex; height: 100vh; }
-        .sidebar { width: 250px; background: var(--primary); color: white; padding: 20px; display: flex; flex-direction: column;}
-        .sidebar h2 { color: var(--secondary); text-align: center; margin-bottom: 30px; }
-        .sidebar a { display: block; padding: 15px; margin-bottom: 10px; background: rgba(255,255,255,0.05); border-radius: 5px; cursor: pointer;}
-        .sidebar a:hover, .sidebar a.active { background: var(--secondary); color: var(--primary); font-weight: bold; }
+        .sidebar { width: 280px; background: var(--primary); color: white; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10;}
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px;}
+        .sidebar a { display: block; padding: 15px 25px; color: #ccc; cursor: pointer; border-left: 4px solid transparent; transition: 0.3s;}
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.05); color: white; border-left: 4px solid var(--secondary); }
+        .sidebar a i { margin-right: 10px; margin-left: 10px; width: 20px; text-align: center;}
+        
         .admin-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .admin-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 30px; animation: fadeIn 0.4s;}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .admin-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px;}
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        table, th, td { border: 1px solid #ddd; }
-        th, td { padding: 12px; text-align: right; }
-        th { background-color: var(--primary); color: white; }
-        .del-btn { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
-        .export-btn { background: #27ae60; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-bottom: 10px;}
+        .admin-title { font-size: 1.5rem; color: var(--primary); margin-bottom: 25px; padding-bottom: 10px; border-bottom: 2px solid #eee;}
+        .form-row { display: flex; gap: 20px; margin-bottom: 15px; }
+        .form-row .group { flex: 1; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; font-size: 0.9rem;}
         
-        /* شاشة تسجيل دخول الأدمن */
-        #admin-login { display: none; height: 100vh; align-items: center; justify-content: center; background: var(--primary); }
-        .login-box { background: white; padding: 40px; border-radius: 10px; width: 350px; text-align: center; }
-        .login-box input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem;}
+        th, td { border-bottom: 1px solid #eee; padding: 15px 10px; text-align: right; }
+        html[dir="ltr"] th, html[dir="ltr"] td { text-align: left; }
+        th { background-color: #f8f9fa; color: var(--primary); }
+        .action-btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-size: 0.8rem; margin: 2px;}
+        .btn-del { background: #e74c3c; } .btn-edit { background: #3498db; } .btn-add { background: #2ecc71; margin-bottom: 15px; display: inline-block;}
+        
+        .item-box { background: #f8f9fa; border: 1px solid #eee; padding: 20px; border-radius: 8px; margin-bottom: 15px; position: relative;}
+        .remove-item { position: absolute; top: 10px; left: 10px; background: #e74c3c; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;}
+        html[dir="ltr"] .remove-item { left: auto; right: 10px; }
+
+        /* Modal العام للاستشارة */
+        .modal { display: none; position: fixed; z-index: 2000; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        .modal-content { background: var(--white); margin: 2% auto; padding: 40px; border-radius: 15px; width: 90%; max-width: 600px; position: relative; max-height: 90vh; overflow-y: auto;}
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #888; }
+        html[dir="ltr"] .close-modal { right: auto; left: 20px; }
 
         @media(max-width: 768px) {
-            .nav-links { display: none; } /* يفضل إضافة قائمة همبرغر لاحقاً */
+            .nav-links { display: none; }
             .hero h1 { font-size: 2.5rem; }
             .admin-layout { flex-direction: column; }
             .sidebar { width: 100%; height: auto; }
+            .sidebar a { display: inline-block; padding: 10px; border:none;}
+            .form-row { flex-direction: column; gap: 0;}
         }
     </style>
 </head>
@@ -147,103 +161,96 @@
         <!-- Header -->
         <header>
             <nav>
-                <div class="logo">بيزنس<span style="color:var(--white)">برو</span></div>
+                <div class="logo" id="site-logo">Aitchikh<span>Consulting</span></div>
                 <ul class="nav-links">
-                    <li><a href="#hero">الرئيسية</a></li>
-                    <li><a href="#services">خدماتنا</a></li>
-                    <li><a href="#projects">مشاريعنا</a></li>
-                    <li><a href="#about">من نحن</a></li>
-                    <li><a href="#contact">اتصل بنا</a></li>
-                    <li><a href="#admin" style="color:var(--secondary)">إدارة</a></li>
+                    <li><a href="#hero" class="tr" data-key="nav_home">الرئيسية</a></li>
+                    <li><a href="#services" class="tr" data-key="nav_services">خدماتنا</a></li>
+                    <li><a href="#projects" class="tr" data-key="nav_projects">مشاريعنا</a></li>
+                    <li><a href="#about" class="tr" data-key="nav_about">من نحن</a></li>
+                    <li><a href="#contact" class="tr" data-key="nav_contact">اتصل بنا</a></li>
                 </ul>
+                <div style="display:flex; gap:10px;">
+                    <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">FR</button>
+                    <a href="#admin" class="lang-btn" style="border-color:#333; color:#fff;" title="Admin"><i class="fa-solid fa-lock"></i></a>
+                </div>
             </nav>
         </header>
 
         <!-- Hero Section -->
         <section class="hero" id="hero">
-            <div class="hero-content">
-                <h1 id="site-hero-title">نحوّل أفكارك إلى مشاريع ناجحة</h1>
-                <p id="site-hero-desc">نقدم استشارات احترافية لمرافقة رواد الأعمال من الفكرة إلى النجاح.</p>
-                <button class="btn-glow" onclick="openModal()">انضم إلينا</button>
+            <div class="slider-container" id="slider-container">
+                <!-- Slides will be injected by JS -->
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content show container">
+                <h1 id="hero-title"></h1>
+                <p id="hero-desc"></p>
+                <button class="btn-glow tr" data-key="btn_join" onclick="openModal()">انضم إلينا</button>
             </div>
         </section>
 
-        <!-- Services Section -->
+        <!-- Services -->
         <section id="services" class="container">
-            <h2 class="section-title">خدماتنا</h2>
-            <div class="services-grid">
-                <div class="service-card"><i class="fa-solid fa-lightbulb"></i><h3>تطوير أفكار المشاريع</h3><p>نساعدك في بلورة فكرتك وتحويلها إلى نموذج عمل مربح.</p></div>
-                <div class="service-card"><i class="fa-solid fa-chart-pie"></i><h3>دراسة المشاريع</h3><p>دراسات جدوى اقتصادية، مالية وتسويقية دقيقة.</p></div>
-                <div class="service-card"><i class="fa-solid fa-rocket"></i><h3>تجسيد المشاريع</h3><p>مرافقة ميدانية وقانونية لتأسيس وإطلاق مشروعك.</p></div>
-                <div class="service-card"><i class="fa-solid fa-globe"></i><h3>التصدير</h3><p>استراتيجيات التصدير واختراق الأسواق الدولية.</p></div>
-                <div class="service-card"><i class="fa-solid fa-laptop-code"></i><h3>التحول الرقمي</h3><p>رقمنة نشاطك التجاري وبناء منظومة رقمية متكاملة.</p></div>
-                <div class="service-card"><i class="fa-solid fa-coins"></i><h3>البحث عن التمويل</h3><p>تجهيز الملفات وإيجاد مستثمرين أو جهات داعمة.</p></div>
+            <h2 class="section-title tr" data-key="title_services">خدماتنا</h2>
+            <div class="grid-wrap" id="services-container"></div>
+        </section>
+
+        <!-- Portfolio / Works -->
+        <section id="portfolio" style="background: var(--bg-color);">
+            <div class="container">
+                <h2 class="section-title tr" data-key="title_portfolio">أعمالنا</h2>
+                <div class="grid-wrap" id="portfolio-container"></div>
             </div>
         </section>
 
-        <!-- Our Work Section (Gallery) -->
-        <section id="gallery" class="container" style="background: var(--bg-color);">
-            <h2 class="section-title">أعمالنا</h2>
-            <div class="gallery-grid" id="gallery-container">
-                <!-- سيتم إضافته برمجيا -->
-            </div>
-        </section>
-
-        <!-- Case Studies (مشاريعنا) -->
+        <!-- Projects / Success Stories -->
         <section id="projects" class="container">
-            <h2 class="section-title">قصص نجاح ومشاريع رافقناها</h2>
-            <div class="projects-grid" id="projects-container">
-                <!-- سيتم إضافته برمجيا -->
-            </div>
+            <h2 class="section-title tr" data-key="title_projects">قصص نجاح</h2>
+            <div class="grid-wrap" id="projects-container"></div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats-section">
+            <div class="container grid-wrap" id="stats-container"></div>
         </section>
 
         <!-- Partners -->
-        <section id="partners" class="container" style="padding-bottom: 40px;">
-            <h2 class="section-title">شركاء النجاح</h2>
-            <div class="partners-wrap" id="partners-container">
-                <!-- سيتم إضافته برمجيا -->
-            </div>
-        </section>
-
-        <!-- Stats Section -->
-        <section class="stats-section">
-            <div class="container stats-grid">
-                <div class="stat-box"><i class="fa-solid fa-briefcase"></i><h2 class="counter" data-target="150">0</h2><p>مشروع تمت مرافقته</p></div>
-                <div class="stat-box"><i class="fa-solid fa-users"></i><h2 class="counter" data-target="320">0</h2><p>عميل سعيد</p></div>
-                <div class="stat-box"><i class="fa-solid fa-handshake"></i><h2 class="counter" data-target="45">0</h2><p>شراكة استراتيجية</p></div>
-                <div class="stat-box"><i class="fa-solid fa-award"></i><h2 class="counter" data-target="12">0</h2><p>سنوات خبرة</p></div>
-            </div>
+        <section id="partners" class="container" style="padding-top: 40px;">
+            <h2 class="section-title tr" data-key="title_partners">شركاء النجاح</h2>
+            <div class="partners-wrap" id="partners-container"></div>
         </section>
 
         <!-- About Us -->
-        <section id="about" class="container">
-            <h2 class="section-title">من نحن</h2>
-            <div class="about-flex">
-                <div class="about-text">
-                    <h3 style="color:var(--primary); margin-bottom:15px; font-size:1.8rem;">رؤيتنا ومهمتنا</h3>
-                    <p style="line-height: 1.8; margin-bottom:15px;">نحن مكتب استشارات رائد متخصص في دعم وتوجيه رواد الأعمال والشركات الناشئة. نقدم خبرات متراكمة في عالم الأعمال لمساعدة عملائنا على تجاوز التحديات وتحقيق نمو مستدام.</p>
-                    <p style="line-height: 1.8;"><strong>مهمتنا:</strong> تمكين الطاقات الشبانية وتحويل الأفكار المبتكرة إلى شركات ناجحة تقود الاقتصاد المحلي وتنافس في الأسواق العالمية.</p>
+        <section id="about" style="background: var(--white);">
+            <div class="container flex-wrap">
+                <div class="flex-half">
+                    <h2 class="section-title" style="text-align: right;" id="about-title"></h2>
+                    <div id="about-text" style="line-height: 1.8; font-size: 1.1rem;"></div>
                 </div>
-                <div class="about-img">
-                    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80" alt="فريق العمل">
+                <div class="flex-half about-img">
+                    <img id="about-img" src="" alt="About Us">
                 </div>
             </div>
         </section>
 
-        <!-- Contact & Location -->
+        <!-- Contact -->
         <section id="contact" class="container">
-            <h2 class="section-title">مقرنا و تواصل معنا</h2>
-            <div class="contact-flex">
-                <div class="contact-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d102347.16375080063!2d3.161986427320092!3d36.71268305844894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128e52a514dce1f1%3A0x7d9dfcd0b5a371c6!2sAlgiers%2C%20Algeria!5e0!3m2!1sen!2s!4v1689000000000!5m2!1sen!2s" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            <h2 class="section-title tr" data-key="title_contact">تواصل معنا</h2>
+            <div class="flex-wrap">
+                <div class="flex-half">
+                    <iframe id="contact-map" src="" width="100%" height="400" style="border:0; border-radius:15px;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
-                <div class="contact-form">
-                    <form onsubmit="handleContact(event)">
-                        <div class="form-group"><input type="text" id="c-name" placeholder="الاسم الكامل" required></div>
-                        <div class="form-group"><input type="tel" id="c-phone" placeholder="رقم الهاتف" required></div>
-                        <div class="form-group"><textarea id="c-msg" rows="4" placeholder="رسالتك..." required></textarea></div>
-                        <button type="submit" class="submit-btn">إرسال الرسالة</button>
+                <div class="flex-half">
+                    <form onsubmit="submitContact(event)">
+                        <input type="text" id="c-name" class="form-control tr-ph" data-key="ph_name" placeholder="الاسم" required>
+                        <input type="tel" id="c-phone" class="form-control tr-ph" data-key="ph_phone" placeholder="الهاتف" required>
+                        <textarea id="c-msg" class="form-control tr-ph" data-key="ph_msg" rows="5" placeholder="الرسالة" required></textarea>
+                        <button type="submit" class="submit-btn tr" data-key="btn_send">إرسال</button>
                     </form>
+                    <div style="margin-top:20px; color:var(--primary);">
+                        <p><i class="fa-solid fa-phone"></i> <span id="info-phone"></span></p>
+                        <p><i class="fa-solid fa-envelope"></i> <span id="info-email"></span></p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -251,310 +258,333 @@
         <!-- Footer -->
         <footer>
             <div class="container">
-                <div class="logo" style="margin-bottom:15px;">بيزنس<span style="color:var(--white)">برو</span></div>
-                <div class="footer-links">
-                    <a href="#">سياسة الخصوصية</a> | <a href="#">شروط الاستخدام</a> | <a href="#admin">تسجيل الدخول للإدارة</a>
-                </div>
+                <h3 id="footer-logo" style="margin-bottom:15px; color:var(--secondary); text-transform:uppercase;"></h3>
                 <div class="socials">
                     <i class="fa-brands fa-facebook"></i>
                     <i class="fa-brands fa-linkedin"></i>
                     <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-x-twitter"></i>
                 </div>
-                <p style="margin-top:20px; font-size:0.9rem;">&copy; 2026 جميع الحقوق محفوظة لمكتب بيزنس برو للاستشارات.</p>
+                <p style="margin-top:20px; font-size:0.9rem; color:#888;">&copy; <span id="current-year"></span> Aitchikh Consulting. All Rights Reserved.</p>
             </div>
         </footer>
 
-        <!-- Modal Form (انضم إلينا) -->
+        <!-- Popup Form -->
         <div id="consultModal" class="modal">
             <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2 style="color:var(--primary); margin-bottom:20px; text-align:center;">طلب استشارة</h2>
-                <form id="consultForm" onsubmit="submitConsultation(event)">
-                    <div class="form-group">
-                        <label>الاسم الكامل</label>
-                        <input type="text" id="f-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>رقم الهاتف</label>
-                        <input type="tel" id="f-phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" id="f-email" required>
-                    </div>
-                    <div class="form-group">
-                        <label>الولاية</label>
-                        <select id="f-wilaya" required>
-                            <option value="">اختر الولاية...</option>
-                            <!-- سيتم التعبئة بالـ JS -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>نوع الاستشارة أو الخدمة</label>
-                        <select id="f-service" required>
-                            <option value="تحويل نشاط إلى نشاط رقمي">تحويل نشاط إلى نشاط رقمي</option>
-                            <option value="تطوير فكرة مشروع">تطوير فكرة مشروع</option>
-                            <option value="تجسيد مشروع">تجسيد مشروع</option>
-                            <option value="دراسة مشروع">دراسة مشروع</option>
-                            <option value="التصدير">التصدير</option>
-                            <option value="البحث عن تمويل">البحث عن تمويل</option>
-                            <option value="البحث عن علاقات وشراكات">البحث عن علاقات وشراكات</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>وصف المشروع (اختياري)</label>
-                        <textarea id="f-desc" rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">إرسال الطلب</button>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <h2 style="color:var(--primary); margin-bottom:20px; text-align:center;" class="tr" data-key="modal_title">طلب استشارة</h2>
+                <form onsubmit="submitConsultation(event)">
+                    <input type="text" id="f-name" class="form-control tr-ph" data-key="ph_name" placeholder="الاسم الكامل" required>
+                    <input type="tel" id="f-phone" class="form-control tr-ph" data-key="ph_phone" placeholder="رقم الهاتف" required>
+                    <input type="email" id="f-email" class="form-control tr-ph" data-key="ph_email" placeholder="البريد الإلكتروني" required>
+                    <input type="text" id="f-city" class="form-control tr-ph" data-key="ph_city" placeholder="المدينة / الولاية" required>
+                    <select id="f-service" class="form-control" required>
+                        <!-- Injected via JS -->
+                    </select>
+                    <textarea id="f-desc" class="form-control tr-ph" data-key="ph_desc" rows="3" placeholder="وصف المشروع (اختياري)"></textarea>
+                    <button type="submit" class="submit-btn tr" data-key="btn_send">إرسال الطلب</button>
                 </form>
             </div>
         </div>
     </div>
 
-
     <!-- =====================================
          شاشة تسجيل الدخول (Admin Login)
     ====================================== -->
     <div id="admin-login">
-        <div class="login-box">
-            <h2 style="color:var(--primary); margin-bottom: 20px;">دخول الإدارة</h2>
-            <input type="text" id="admin-user" placeholder="اسم المستخدم (admin)">
-            <input type="password" id="admin-pass" placeholder="كلمة المرور (admin123)">
-            <button class="submit-btn" onclick="loginAdmin()">دخول</button>
-            <p id="login-err" style="color:red; margin-top:10px; display:none;">بيانات الدخول خاطئة!</p>
-            <a href="#" onclick="location.hash=''" style="display:block; margin-top:15px; color:#666;">العودة للموقع</a>
+        <div style="background:white; padding:40px; border-radius:15px; width:100%; max-width:400px; margin: 10vh auto; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+            <h2 style="color:var(--primary); margin-bottom: 25px;"><i class="fa-solid fa-lock" style="color:var(--secondary);"></i> Aitchikh CMS</h2>
+            <input type="text" id="login-user" class="form-control" placeholder="Username (admin)">
+            <input type="password" id="login-pass" class="form-control" placeholder="Password (admin)">
+            <button class="submit-btn" onclick="loginAdmin()">Login</button>
+            <p id="login-err" style="color:red; margin-top:10px; display:none;">Invalid credentials</p>
+            <a href="#" onclick="location.hash=''" style="display:block; margin-top:20px; color:#888;">Back to Website</a>
         </div>
     </div>
 
-
     <!-- =====================================
-         لوحة تحكم الإدارة (Admin Dashboard)
+         لوحة التحكم (Admin Dashboard CMS)
     ====================================== -->
     <div id="admin-panel">
         <div class="admin-layout">
             <div class="sidebar">
-                <h2>لوحة التحكم</h2>
-                <a class="active" onclick="switchTab('dashboard')">إحصائيات عامة</a>
-                <a onclick="switchTab('requests')">إدارة الطلبات</a>
-                <a onclick="switchTab('content')">إدارة النصوص والموقع</a>
-                <a href="#" onclick="logoutAdmin()" style="margin-top:auto; background:#e74c3c;">تسجيل الخروج</a>
+                <div class="sidebar-header">
+                    <h3 style="color:var(--secondary);">Aitchikh CMS</h3>
+                    <small>Super Admin</small>
+                </div>
+                <a class="active" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-line"></i> الإحصائيات</a>
+                <a onclick="switchTab('inbox')"><i class="fa-solid fa-inbox"></i> صندوق الوارد</a>
+                <a onclick="switchTab('general')"><i class="fa-solid fa-gear"></i> إعدادات عامة</a>
+                <a onclick="switchTab('slider')"><i class="fa-solid fa-images"></i> السلايدر (البانر)</a>
+                <a onclick="switchTab('services')"><i class="fa-solid fa-briefcase"></i> الخدمات</a>
+                <a onclick="switchTab('portfolio')"><i class="fa-solid fa-folder-open"></i> المشاريع والأعمال</a>
+                <a onclick="switchTab('about')"><i class="fa-solid fa-address-card"></i> من نحن والأرقام</a>
+                <a onclick="switchTab('partners')"><i class="fa-solid fa-handshake"></i> الشركاء</a>
+                <a onclick="exportImportDB()"><i class="fa-solid fa-database"></i> نسخ احتياطي</a>
+                <a href="#" onclick="logoutAdmin()" style="margin-top:auto; background:#c0392b; color:white;"><i class="fa-solid fa-power-off"></i> خروج</a>
             </div>
             
-            <div class="admin-content">
-                <!-- تبويب الإحصائيات -->
-                <div id="tab-dashboard" class="admin-card">
-                    <h3 style="margin-bottom:20px;">نظرة عامة</h3>
-                    <div class="stats-grid" style="color:#333;">
-                        <div style="background:#f9f9f9; padding:20px; border-radius:10px; text-align:center;">
-                            <h4 style="color:var(--primary);">طلبات الاستشارة</h4>
-                            <h1 id="ad-stat-req" style="color:var(--secondary); font-size:3rem;">0</h1>
-                        </div>
-                        <div style="background:#f9f9f9; padding:20px; border-radius:10px; text-align:center;">
-                            <h4 style="color:var(--primary);">رسائل التواصل</h4>
-                            <h1 id="ad-stat-msg" style="color:var(--secondary); font-size:3rem;">0</h1>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- تبويب الطلبات -->
-                <div id="tab-requests" class="admin-card" style="display:none;">
-                    <h3 style="margin-bottom:20px;">إدارة طلبات الاستشارة</h3>
-                    <button class="export-btn" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> تصدير الطلبات CSV</button>
-                    <div style="overflow-x:auto;">
-                        <table id="requests-table">
-                            <thead>
-                                <tr>
-                                    <th>الاسم</th><th>الهاتف</th><th>الإيميل</th><th>الولاية</th><th>الخدمة المطلوبة</th><th>الوصف</th><th>إجراء</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- سيتم التعبئة -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- تبويب النصوص (محاكاة لتغيير نصوص الموقع) -->
-                <div id="tab-content" class="admin-card" style="display:none;">
-                    <h3 style="margin-bottom:20px;">إعدادات الموقع والنصوص</h3>
-                    <div class="form-group">
-                        <label>عنوان الموقع الرئيسي (Hero Title)</label>
-                        <input type="text" id="edit-hero-title">
-                    </div>
-                    <div class="form-group">
-                        <label>الوصف القصير (Hero Desc)</label>
-                        <input type="text" id="edit-hero-desc">
-                    </div>
-                    <button class="submit-btn" onclick="saveSiteSettings()" style="width:auto;">حفظ التعديلات</button>
-                </div>
+            <div class="admin-content" id="admin-content-area">
+                <!-- Tabs will be injected and controlled via JS -->
             </div>
         </div>
     </div>
 
-
     <!-- =====================================
-         سكربت JavaScript (التشغيل والمحاكاة)
+         سكربت JavaScript (الديناميكية والبيانات)
     ====================================== -->
     <script>
-        // 1. إعداد قائمة الولايات
-        const wilayas =[
-            "أدرار", "الشلف", "الأغواط", "أم البواقي", "باتنة", "بجاية", "بسكرة", "بشار", "البليدة", "البويرة", 
-            "تمنراست", "تبسة", "تلمسان", "تيارت", "تيزي وزو", "الجزائر", "الجلفة", "جيجل", "سطيف", "سعيدة", 
-            "سكيكدة", "سيدي بلعباس", "عنابة", "قالمة", "قسنطينة", "المدية", "مستغانم", "المسيلة", "معسكر", "ورقلة", 
-            "وهران", "البيض", "إليزي", "برج بوعريريج", "بومرداس", "الطارف", "تندوف", "تسمسيلت", "الوادي", "خنشلة", 
-            "سوق أهراس", "تيبازة", "ميلة", "عين الدفلى", "النعامة", "عين تموشنت", "غرداية", "غليزان", "تيميمون", 
-            "برج باجي مختار", "أولاد جلال", "بني عباس", "إن صالح", "إن قزام", "تقرت", "جانت", "المغير", "المنيعة"
-        ];
-        const wilayaSelect = document.getElementById('f-wilaya');
-        wilayas.forEach((w, index) => {
-            let opt = document.createElement('option');
-            opt.value = `${index+1} - ${w}`;
-            opt.textContent = `${index+1} - ${w}`;
-            wilayaSelect.appendChild(opt);
-        });
-
-        // 2. إعداد البيانات الابتدائية والمحاكاة باستخدام LocalStorage
-        let db = JSON.parse(localStorage.getItem('bizpro_db')) || {
-            requests:[],
-            messages:[],
-            site: {
-                heroTitle: "نحوّل أفكارك إلى مشاريع ناجحة",
-                heroDesc: "نقدم استشارات احترافية لمرافقة رواد الأعمال من الفكرة إلى النجاح."
+        // 1. قاعدة البيانات الافتراضية ثنائية اللغة (Database Schema)
+        const defaultDB = {
+            settings: {
+                logo: "Aitchikh",
+                logoSpan: "Consulting",
+                phone: "+213 555 123 456",
+                email: "contact@aitchikh.com",
+                map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d102347.16375080063!2d3.161986427320092!3d36.71268305844894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128e52a514dce1f1%3A0x7d9dfcd0b5a371c6!2sAlgiers!5e0!3m2!1sen!2sdz!4v1700000000000!5m2!1sen!2sdz"
             },
-            projects:[
-                { img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500", title: "متجر زاد للتمور", desc: "تحويل متجر تقليدي إلى منصة تجارة إلكترونية دولية.", type: "تحول رقمي وتصدير", results: "زيادة المبيعات 300% ودخول السوق الأوروبي." },
-                { img: "https://images.unsplash.com/photo-1664575602554-2087b04935a5?w=500", title: "مصنع الأمل", desc: "دراسة جدوى ومرافقة للحصول على تمويل بنكي لمصنع تعليب.", type: "تمويل ودراسة", results: "الحصول على تمويل بقيمة 50 مليون دينار." }
+            slider:[
+                { img: "https://images.unsplash.com/photo-1556761175-4b46a572b786?q=80&w=1920", title: {ar:"نحوّل أفكارك إلى مشاريع ناجحة", fr:"Transformer vos idées en succès"}, desc: {ar:"استشارات احترافية لمرافقة رواد الأعمال.", fr:"Consulting professionnel pour accompagner les entrepreneurs."} },
+                { img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1920", title: {ar:"استراتيجيات نمو مخصصة", fr:"Stratégies de croissance sur mesure"}, desc: {ar:"نحن نخطط، أنت تنجح.", fr:"Nous planifions, vous réussissez."} },
+                { img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1920", title: {ar:"التحول الرقمي لأعمالك", fr:"Transformation Digitale"}, desc: {ar:"ندخل شركتك إلى عصر التكنولوجيا.", fr:"Faites entrer votre entreprise dans l'ère technologique."} }
             ],
-            gallery:[
-                { img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=500", title: "اجتماع شراكة", desc: "توقيع اتفاقية مع مستثمرين أجانب", type: "بناء شراكات" },
-                { img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=500", title: "ورشة عمل", desc: "تدريب رواد الأعمال على التحول الرقمي", type: "تطوير أعمال" },
-                { img: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500", title: "إطلاق منتج", desc: "إطلاق منتج تكنولوجي لشركة ناشئة", type: "تجسيد مشاريع" }
+            services:[
+                { icon: "fa-lightbulb", title: {ar:"تطوير المشاريع", fr:"Développement de Projets"}, desc: {ar:"بلورة الأفكار لنموذج عمل مربح.", fr:"Concrétiser les idées en modèles rentables."} },
+                { icon: "fa-chart-pie", title: {ar:"دراسة الجدوى", fr:"Étude de Faisabilité"}, desc: {ar:"دراسات اقتصادية ومالية دقيقة.", fr:"Études économiques et financières précises."} },
+                { icon: "fa-rocket", title: {ar:"تأسيس الشركات", fr:"Création d'Entreprises"}, desc: {ar:"مرافقة ميدانية وقانونية للإطلاق.", fr:"Accompagnement juridique et terrain."} },
+                { icon: "fa-globe", title: {ar:"التصدير", fr:"Exportation"}, desc: {ar:"استراتيجيات اختراق الأسواق الدولية.", fr:"Stratégies de pénétration des marchés internationaux."} },
+                { icon: "fa-laptop-code", title: {ar:"التحول الرقمي", fr:"Digitalisation"}, desc: {ar:"رقمنة النشاط التجاري بالكامل.", fr:"Numérisation complète de votre activité."} },
+                { icon: "fa-coins", title: {ar:"تمويل المشاريع", fr:"Recherche de Financement"}, desc: {ar:"تجهيز الملفات وإيجاد مستثمرين.", fr:"Préparation de dossiers et recherche d'investisseurs."} }
+            ],
+            portfolio:[
+                { img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=500", title: {ar:"توقيع شراكات", fr:"Signature de Partenariats"}, desc: {ar:"إدارة المفاوضات", fr:"Gestion des négociations"} },
+                { img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500", title: {ar:"ورشة عمل", fr:"Ateliers de Travail"}, desc: {ar:"تدريب رواد الأعمال", fr:"Formation des entrepreneurs"} }
+            ],
+            projects:[
+                { img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500", title: {ar:"إطلاق منصة زاد", fr:"Lancement Plateforme Zad"}, tag: {ar:"تحول رقمي", fr:"Digitalisation"}, desc: {ar:"زيادة المبيعات بنسبة 300%.", fr:"Augmentation des ventes de 300%."} },
+                { img: "https://images.unsplash.com/photo-1664575602554-2087b04935a5?w=500", title: {ar:"مصنع الأمل", fr:"Usine El Amal"}, tag: {ar:"دراسة وتمويل", fr:"Étude & Financement"}, desc: {ar:"تأمين تمويل بقيمة 50 مليون.", fr:"Sécurisation d'un financement de 50 Millions."} }
             ],
             partners:[
                 "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
                 "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
                 "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
-            ]
+            ],
+            about: {
+                title: {ar: "رؤيتنا ومهمتنا", fr: "Notre Vision et Mission"},
+                text: {ar: "<p>نحن <strong>Aitchikh Consulting</strong>، مكتب استشارات رائد متخصص في دعم رواد الأعمال والشركات. نقدم خبرات متراكمة في عالم الأعمال لمساعدة عملائنا على تجاوز التحديات وتحقيق نمو مستدام.</p><p>مهمتنا تمكين الأفكار المبتكرة لتصبح شركات تقود الاقتصاد.</p>", fr: "<p>Nous sommes <strong>Aitchikh Consulting</strong>, un cabinet de conseil leader spécialisé dans le soutien aux entrepreneurs. Nous offrons notre expertise pour vous aider à surmonter les défis.</p><p>Notre mission est de transformer des idées innovantes en entreprises prospères.</p>"},
+                img: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800",
+                stats:[
+                    { icon: "fa-briefcase", num: 150, text: {ar:"مشروع", fr:"Projets"} },
+                    { icon: "fa-users", num: 320, text: {ar:"عميل", fr:"Clients"} },
+                    { icon: "fa-handshake", num: 45, text: {ar:"شراكة", fr:"Partenariats"} },
+                    { icon: "fa-award", num: 12, text: {ar:"سنوات خبرة", fr:"Ans d'Expérience"} }
+                ]
+            },
+            inbox: { requests: [], messages:[] },
+            visitors: 1205
         };
 
-        function saveDB() { localStorage.setItem('bizpro_db', JSON.stringify(db)); }
+        // Translations Dictionary
+        const translations = {
+            nav_home: { ar: "الرئيسية", fr: "Accueil" },
+            nav_services: { ar: "خدماتنا", fr: "Services" },
+            nav_projects: { ar: "مشاريعنا", fr: "Projets" },
+            nav_about: { ar: "من نحن", fr: "À Propos" },
+            nav_contact: { ar: "اتصل بنا", fr: "Contact" },
+            btn_join: { ar: "انضم إلينا", fr: "Rejoignez-nous" },
+            title_services: { ar: "خدماتنا", fr: "Nos Services" },
+            title_portfolio: { ar: "أعمالنا", fr: "Nos Réalisations" },
+            title_projects: { ar: "قصص نجاح", fr: "Histoires de Succès" },
+            title_partners: { ar: "شركاء النجاح", fr: "Nos Partenaires" },
+            title_contact: { ar: "تواصل معنا", fr: "Contactez-nous" },
+            ph_name: { ar: "الاسم الكامل", fr: "Nom Complet" },
+            ph_phone: { ar: "رقم الهاتف", fr: "Numéro de Téléphone" },
+            ph_msg: { ar: "الرسالة...", fr: "Votre Message..." },
+            btn_send: { ar: "إرسال", fr: "Envoyer" },
+            modal_title: { ar: "طلب استشارة", fr: "Demande de Consultation" },
+            ph_email: { ar: "البريد الإلكتروني", fr: "Email" },
+            ph_city: { ar: "المدينة / الولاية", fr: "Ville / Wilaya" },
+            ph_desc: { ar: "وصف المشروع (اختياري)", fr: "Description du projet (Optionnel)" }
+        };
 
-        // 3. بناء واجهة الموقع بناءً على قاعدة البيانات
-        function renderSite() {
-            document.getElementById('site-hero-title').textContent = db.site.heroTitle;
-            document.getElementById('site-hero-desc').textContent = db.site.heroDesc;
+        // 2. إدارة الحالة (State Management)
+        let db = JSON.parse(localStorage.getItem('aitchikh_db')) || defaultDB;
+        let currentLang = localStorage.getItem('aitchikh_lang') || 'ar';
+        db.visitors++; // Simulate visitor count
+        saveDB();
+
+        function saveDB() { localStorage.setItem('aitchikh_db', JSON.stringify(db)); }
+        
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // 3. نظام الترجمة (Translation System)
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'fr' : 'ar';
+            localStorage.setItem('aitchikh_lang', currentLang);
+            applyLanguage();
+            renderSite(); // Re-render dynamic content
+        }
+
+        function applyLanguage() {
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('lang-toggle').textContent = currentLang === 'ar' ? 'FR' : 'AR';
             
-            // المشاريع
-            const projContainer = document.getElementById('projects-container');
-            projContainer.innerHTML = db.projects.map(p => `
-                <div class="project-card">
-                    <img src="${p.img}" alt="${p.title}">
-                    <div class="project-info">
-                        <h4>${p.title}</h4>
-                        <p style="margin: 10px 0;">${p.desc}</p>
-                        <span style="font-size:0.8rem; color:var(--secondary); font-weight:bold;">${p.type}</span>
-                        <div class="project-results"><strong>النتائج:</strong> ${p.results}</div>
+            // Static translations
+            document.querySelectorAll('.tr').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(translations[key]) el.textContent = translations[key][currentLang];
+            });
+            document.querySelectorAll('.tr-ph').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if(translations[key]) el.placeholder = translations[key][currentLang];
+            });
+        }
+
+        // 4. بناء واجهة الموقع (Render Website)
+        function renderSite() {
+            // General Settings
+            document.getElementById('site-logo').innerHTML = `${db.settings.logo}<span>${db.settings.logoSpan}</span>`;
+            document.getElementById('footer-logo').textContent = `${db.settings.logo} ${db.settings.logoSpan}`;
+            document.getElementById('info-phone').textContent = db.settings.phone;
+            document.getElementById('info-email').textContent = db.settings.email;
+            document.getElementById('contact-map').src = db.settings.map;
+
+            // Hero Slider
+            const sliderContainer = document.getElementById('slider-container');
+            sliderContainer.innerHTML = db.slider.map((s, i) => `
+                <div class="slide ${i === 0 ? 'active' : ''}">
+                    <div class="slide-bg" style="background-image: url('${s.img}')"></div>
+                </div>
+            `).join('');
+            
+            // Hero Text Update
+            updateHeroText(0);
+
+            // Services
+            document.getElementById('services-container').innerHTML = db.services.map(s => `
+                <div class="card service-card">
+                    <i class="fa-solid ${s.icon}"></i>
+                    <h3>${s.title[currentLang]}</h3>
+                    <p>${s.desc[currentLang]}</p>
+                </div>
+            `).join('');
+
+            // Select Options for Modal
+            document.getElementById('f-service').innerHTML = `<option value="">-- ${currentLang==='ar'?'اختر خدمة':'Choisissez un service'} --</option>` + 
+                db.services.map(s => `<option value="${s.title[currentLang]}">${s.title[currentLang]}</option>`).join('');
+
+            // Portfolio
+            document.getElementById('portfolio-container').innerHTML = db.portfolio.map(p => `
+                <div class="card img-card">
+                    <img src="${p.img}">
+                    <div class="card-info">
+                        <h4>${p.title[currentLang]}</h4>
+                        <p>${p.desc[currentLang]}</p>
                     </div>
                 </div>
             `).join('');
 
-            // المعرض
-            const galContainer = document.getElementById('gallery-container');
-            galContainer.innerHTML = db.gallery.map(g => `
-                <div class="gallery-item">
-                    <img src="${g.img}" alt="${g.title}">
-                    <div class="gallery-info">
-                        <h4>${g.title}</h4>
-                        <p>${g.desc}</p>
-                        <small style="color:var(--secondary)">${g.type}</small>
+            // Projects
+            document.getElementById('projects-container').innerHTML = db.projects.map(p => `
+                <div class="card img-card">
+                    <img src="${p.img}">
+                    <div class="card-info">
+                        <h4>${p.title[currentLang]}</h4>
+                        <span class="badge">${p.tag[currentLang]}</span>
+                        <p style="margin-top:10px;">${p.desc[currentLang]}</p>
                     </div>
                 </div>
             `).join('');
 
-            // الشركاء
-            const partContainer = document.getElementById('partners-container');
-            partContainer.innerHTML = db.partners.map(p => `
-                <div class="partner-logo"><img src="${p}" alt="Partner"></div>
+            // Partners
+            document.getElementById('partners-container').innerHTML = db.partners.map(p => `
+                <div class="partner-logo"><img src="${p}"></div>
+            `).join('');
+
+            // About Us
+            document.getElementById('about-title').textContent = db.about.title[currentLang];
+            document.getElementById('about-text').innerHTML = db.about.text[currentLang];
+            document.getElementById('about-img').src = db.about.img;
+
+            // Stats
+            document.getElementById('stats-container').innerHTML = db.about.stats.map(s => `
+                <div class="stat-box">
+                    <i class="fa-solid ${s.icon}"></i>
+                    <h2>${s.num}</h2>
+                    <p>${s.text[currentLang]}</p>
+                </div>
             `).join('');
         }
-        renderSite();
 
-        // 4. وظائف السلايدر (Slider) المتغير
-        const heroSection = document.getElementById('hero');
-        const heroImages =[
-            'https://images.unsplash.com/photo-1556761175-4b46a572b786?auto=format&fit=crop&w=1920&q=80',
-            'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1920&q=80',
-            'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1920&q=80'
-        ];
-        let currentImg = 0;
-        setInterval(() => {
-            currentImg = (currentImg + 1) % heroImages.length;
-            heroSection.style.backgroundImage = `linear-gradient(rgba(10, 37, 64, 0.8), rgba(10, 37, 64, 0.8)), url('${heroImages[currentImg]}')`;
-        }, 5000);
+        // 5. وظائف السلايدر (Slider Animation Logic)
+        let currentSlide = 0;
+        let sliderInterval;
+        function updateHeroText(index) {
+            const h1 = document.getElementById('hero-title');
+            const p = document.getElementById('hero-desc');
+            const content = document.querySelector('.hero-content');
+            
+            content.classList.remove('show');
+            setTimeout(() => {
+                h1.textContent = db.slider[index].title[currentLang];
+                p.textContent = db.slider[index].desc[currentLang];
+                content.classList.add('show');
+            }, 500); // Wait for fade out
+        }
 
-        // 5. وظائف النماذج (Forms)
+        function startSlider() {
+            clearInterval(sliderInterval);
+            sliderInterval = setInterval(() => {
+                if(db.slider.length <= 1) return;
+                let slides = document.querySelectorAll('.slide');
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+                updateHeroText(currentSlide);
+            }, 6000);
+        }
+
+        // 6. النماذج والتواصل (Forms)
         const modal = document.getElementById('consultModal');
         function openModal() { modal.style.display = 'block'; }
         function closeModal() { modal.style.display = 'none'; }
-        window.onclick = function(event) { if (event.target == modal) closeModal(); }
+        window.onclick = function(e) { if (e.target == modal) closeModal(); }
 
         function submitConsultation(e) {
             e.preventDefault();
-            const req = {
-                id: Date.now(),
+            db.inbox.requests.push({
+                date: new Date().toLocaleDateString(),
                 name: document.getElementById('f-name').value,
                 phone: document.getElementById('f-phone').value,
                 email: document.getElementById('f-email').value,
-                wilaya: document.getElementById('f-wilaya').value,
+                city: document.getElementById('f-city').value,
                 service: document.getElementById('f-service').value,
-                desc: document.getElementById('f-desc').value,
-                date: new Date().toLocaleDateString('ar-DZ')
-            };
-            db.requests.push(req);
+                desc: document.getElementById('f-desc').value
+            });
             saveDB();
-            alert("تم إرسال طلبك بنجاح! سنتواصل معك قريباً.");
+            alert(currentLang === 'ar' ? "تم إرسال طلبك بنجاح!" : "Demande envoyée avec succès!");
             closeModal();
-            document.getElementById('consultForm').reset();
-            renderAdminData(); // تحديث لوحة التحكم إذا كانت مفتوحة
+            e.target.reset();
         }
 
-        function handleContact(e) {
+        function submitContact(e) {
             e.preventDefault();
-            db.messages.push({
+            db.inbox.messages.push({
+                date: new Date().toLocaleDateString(),
                 name: document.getElementById('c-name').value,
                 phone: document.getElementById('c-phone').value,
                 msg: document.getElementById('c-msg').value
             });
             saveDB();
-            alert("تم إرسال رسالتك!");
+            alert(currentLang === 'ar' ? "تم استلام رسالتك!" : "Message reçu!");
             e.target.reset();
         }
 
-        // 6. تأثير العدادات (Counter Animation)
-        const counters = document.querySelectorAll('.counter');
-        const speed = 200; 
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    const updateCount = () => {
-                        const target = +entry.target.getAttribute('data-target');
-                        const count = +entry.target.innerText;
-                        const inc = target / speed;
-                        if(count < target) {
-                            entry.target.innerText = Math.ceil(count + inc);
-                            setTimeout(updateCount, 10);
-                        } else { entry.target.innerText = target; }
-                    };
-                    updateCount();
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-        counters.forEach(counter => observer.observe(counter));
-
 
         // ==========================================
-        // وظائف لوحة التحكم والأدمن (Routing & Admin)
+        // ADMIN CMS LOGIC (نظام إدارة المحتوى)
         // ==========================================
         function checkRoute() {
             const hash = window.location.hash;
@@ -563,96 +593,236 @@
             document.getElementById('admin-panel').style.display = 'none';
 
             if(hash === '#admin') {
-                if(sessionStorage.getItem('isAdmin') === 'true') {
+                if(sessionStorage.getItem('aitchikh_admin') === 'true') {
                     document.getElementById('admin-panel').style.display = 'block';
-                    renderAdminData();
-                } else {
-                    document.getElementById('admin-login').style.display = 'flex';
-                }
+                    buildAdminUI();
+                    switchTab('dashboard');
+                } else { document.getElementById('admin-login').style.display = 'block'; }
             } else {
                 document.getElementById('main-website').style.display = 'block';
+                applyLanguage();
+                renderSite();
+                startSlider();
             }
         }
         window.addEventListener('hashchange', checkRoute);
         window.addEventListener('load', checkRoute);
 
         function loginAdmin() {
-            const u = document.getElementById('admin-user').value;
-            const p = document.getElementById('admin-pass').value;
-            if(u === 'admin' && p === 'admin123') {
-                sessionStorage.setItem('isAdmin', 'true');
+            if(document.getElementById('login-user').value === 'admin' && document.getElementById('login-pass').value === 'admin') {
+                sessionStorage.setItem('aitchikh_admin', 'true');
                 window.location.reload();
-            } else {
-                document.getElementById('login-err').style.display = 'block';
-            }
+            } else { document.getElementById('login-err').style.display = 'block'; }
         }
 
-        function logoutAdmin() {
-            sessionStorage.removeItem('isAdmin');
-            window.location.hash = '';
-        }
+        function logoutAdmin() { sessionStorage.removeItem('aitchikh_admin'); window.location.hash = ''; }
 
-        function switchTab(tabId) {
-            document.getElementById('tab-dashboard').style.display = 'none';
-            document.getElementById('tab-requests').style.display = 'none';
-            document.getElementById('tab-content').style.display = 'none';
-            document.getElementById('tab-' + tabId).style.display = 'block';
-            
+        function switchTab(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
+            document.getElementById(`tab-${tab}`).style.display = 'block';
             document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
-            event.target.classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        function renderAdminData() {
-            // الإحصائيات
-            document.getElementById('ad-stat-req').textContent = db.requests.length;
-            document.getElementById('ad-stat-msg').textContent = db.messages.length;
+        // بناء لوحات تحكم الإدارة ديناميكياً
+        function buildAdminUI() {
+            const area = document.getElementById('admin-content-area');
+            area.innerHTML = `
+                <!-- Dashboard -->
+                <div id="tab-dashboard" class="admin-tab">
+                    <h2 class="admin-title">نظرة عامة</h2>
+                    <div class="grid-wrap">
+                        <div class="admin-card" style="text-align:center;"><h3>الزوار</h3><h1 style="color:var(--secondary); font-size:3rem;">${db.visitors}</h1></div>
+                        <div class="admin-card" style="text-align:center;"><h3>الطلبات</h3><h1 style="color:var(--primary); font-size:3rem;">${db.inbox.requests.length}</h1></div>
+                        <div class="admin-card" style="text-align:center;"><h3>الرسائل</h3><h1 style="color:var(--primary); font-size:3rem;">${db.inbox.messages.length}</h1></div>
+                    </div>
+                </div>
 
-            // جدول الطلبات
-            const tbody = document.querySelector('#requests-table tbody');
-            tbody.innerHTML = db.requests.map((r, index) => `
-                <tr>
-                    <td>${r.name}</td><td>${r.phone}</td><td>${r.email}</td>
-                    <td>${r.wilaya}</td><td>${r.service}</td><td>${r.desc || '-'}</td>
-                    <td><button class="del-btn" onclick="deleteRequest(${index})">حذف</button></td>
-                </tr>
+                <!-- Inbox -->
+                <div id="tab-inbox" class="admin-tab" style="display:none;">
+                    <h2 class="admin-title">صندوق الوارد (طلبات الاستشارة)</h2>
+                    <div class="admin-card" style="overflow-x:auto;">
+                        <table>
+                            <tr><th>التاريخ</th><th>الاسم</th><th>الهاتف</th><th>الخدمة</th><th>إجراء</th></tr>
+                            ${db.inbox.requests.map((r,i) => `<tr><td>${r.date}</td><td>${r.name}</td><td>${r.phone}</td><td>${r.service}</td><td><button class="action-btn btn-del" onclick="delReq(${i})">حذف</button></td></tr>`).join('')}
+                        </table>
+                    </div>
+                </div>
+
+                <!-- General -->
+                <div id="tab-general" class="admin-tab" style="display:none;">
+                    <div class="admin-card">
+                        <h2 class="admin-title">إعدادات الموقع الأساسية</h2>
+                        <div class="form-row"><div class="group"><label>اللوجو (الكلمة الأولى)</label><input type="text" id="ad-logo1" class="form-control" value="${db.settings.logo}"></div><div class="group"><label>اللوجو (الكلمة الثانية)</label><input type="text" id="ad-logo2" class="form-control" value="${db.settings.logoSpan}"></div></div>
+                        <div class="form-row"><div class="group"><label>رقم الهاتف</label><input type="text" id="ad-phone" class="form-control" value="${db.settings.phone}"></div><div class="group"><label>البريد الإلكتروني</label><input type="text" id="ad-email" class="form-control" value="${db.settings.email}"></div></div>
+                        <label>رابط خريطة جوجل (Embed URL)</label><input type="text" id="ad-map" class="form-control" value="${db.settings.map}">
+                        <button class="submit-btn" onclick="saveGeneral()">حفظ الإعدادات</button>
+                    </div>
+                </div>
+
+                <!-- Slider -->
+                <div id="tab-slider" class="admin-tab" style="display:none;">
+                    <div class="admin-card">
+                        <h2 class="admin-title">إدارة السلايدر</h2>
+                        <button class="action-btn btn-add" onclick="addArrayItem('slider')">+ إضافة شريحة</button>
+                        <div id="ad-slider-list"></div>
+                        <button class="submit-btn" onclick="saveArray('slider')">حفظ السلايدر</button>
+                    </div>
+                </div>
+
+                <!-- Services -->
+                <div id="tab-services" class="admin-tab" style="display:none;">
+                    <div class="admin-card">
+                        <h2 class="admin-title">إدارة الخدمات</h2>
+                        <button class="action-btn btn-add" onclick="addArrayItem('services')">+ إضافة خدمة</button>
+                        <div id="ad-services-list"></div>
+                        <button class="submit-btn" onclick="saveArray('services')">حفظ الخدمات</button>
+                    </div>
+                </div>
+
+                <!-- Portfolio & Projects -->
+                <div id="tab-portfolio" class="admin-tab" style="display:none;">
+                    <div class="admin-card">
+                        <h2 class="admin-title">الأعمال (الصور البسيطة)</h2>
+                        <button class="action-btn btn-add" onclick="addArrayItem('portfolio')">+ إضافة عمل</button>
+                        <div id="ad-portfolio-list"></div>
+                        <button class="submit-btn" onclick="saveArray('portfolio')">حفظ الأعمال</button>
+                    </div>
+                    <div class="admin-card">
+                        <h2 class="admin-title">قصص النجاح (المشاريع بالنتائج)</h2>
+                        <button class="action-btn btn-add" onclick="addArrayItem('projects')">+ إضافة مشروع</button>
+                        <div id="ad-projects-list"></div>
+                        <button class="submit-btn" onclick="saveArray('projects')">حفظ المشاريع</button>
+                    </div>
+                </div>
+
+                <!-- Partners -->
+                <div id="tab-partners" class="admin-tab" style="display:none;">
+                    <div class="admin-card">
+                        <h2 class="admin-title">إدارة الشركاء (روابط الصور)</h2>
+                        <textarea id="ad-partners" class="form-control" rows="6" placeholder="ضع رابط كل صورة في سطر جديد..."></textarea>
+                        <button class="submit-btn" onclick="savePartners()">حفظ الشركاء</button>
+                    </div>
+                </div>
+
+                <!-- About Us -->
+                <div id="tab-about" class="admin-tab" style="display:none;">
+                    <div class="admin-card">
+                        <h2 class="admin-title">من نحن</h2>
+                        <div class="form-row"><div class="group"><label>العنوان (عربي)</label><input type="text" id="ab-title-ar" class="form-control" value="${db.about.title.ar}"></div><div class="group"><label>العنوان (فرنسي)</label><input type="text" id="ab-title-fr" class="form-control" value="${db.about.title.fr}"></div></div>
+                        <label>النص (عربي - يدعم HTML)</label><textarea id="ab-text-ar" class="form-control" rows="4">${db.about.text.ar}</textarea>
+                        <label>النص (فرنسي - يدعم HTML)</label><textarea id="ab-text-fr" class="form-control" rows="4">${db.about.text.fr}</textarea>
+                        <label>رابط الصورة</label><input type="text" id="ab-img" class="form-control" value="${db.about.img}">
+                        <h3 style="margin:20px 0;">الإحصائيات</h3>
+                        <div id="ad-stats-list"></div>
+                        <button class="submit-btn" onclick="saveAbout()">حفظ قسم من نحن</button>
+                    </div>
+                </div>
+            `;
+            
+            // Render Arrays
+            renderArray('slider',['img', 'title.ar', 'title.fr', 'desc.ar', 'desc.fr']);
+            renderArray('services',['icon', 'title.ar', 'title.fr', 'desc.ar', 'desc.fr']);
+            renderArray('portfolio',['img', 'title.ar', 'title.fr', 'desc.ar', 'desc.fr']);
+            renderArray('projects',['img', 'title.ar', 'title.fr', 'tag.ar', 'tag.fr', 'desc.ar', 'desc.fr']);
+            
+            // Render Stats
+            document.getElementById('ad-stats-list').innerHTML = db.about.stats.map((s,i) => `
+                <div class="form-row">
+                    <input type="text" id="st-icon-${i}" class="form-control" value="${s.icon}" placeholder="fa-icon">
+                    <input type="number" id="st-num-${i}" class="form-control" value="${s.num}">
+                    <input type="text" id="st-ar-${i}" class="form-control" value="${s.text.ar}" placeholder="AR">
+                    <input type="text" id="st-fr-${i}" class="form-control" value="${s.text.fr}" placeholder="FR">
+                </div>
             `).join('');
 
-            // الإعدادات
-            document.getElementById('edit-hero-title').value = db.site.heroTitle;
-            document.getElementById('edit-hero-desc').value = db.site.heroDesc;
+            // Render Partners
+            document.getElementById('ad-partners').value = db.partners.join('\n');
         }
 
-        function deleteRequest(index) {
-            if(confirm("هل أنت متأكد من الحذف؟")) {
-                db.requests.splice(index, 1);
-                saveDB();
-                renderAdminData();
-            }
+        // Helper to render arrays in Admin
+        function renderArray(key, fields) {
+            const container = document.getElementById(`ad-${key}-list`);
+            container.innerHTML = db[key].map((item, index) => `
+                <div class="item-box" id="box-${key}-${index}">
+                    <button class="remove-item" onclick="removeArrayItem('${key}', ${index})"><i class="fa-solid fa-times"></i></button>
+                    ${fields.map(f => {
+                        let val = f.includes('.') ? item[f.split('.')[0]][f.split('.')[1]] : item[f];
+                        return `<label>${f}</label><input type="text" class="form-control ${key}-input" data-idx="${index}" data-field="${f}" value="${val}">`;
+                    }).join('')}
+                </div>
+            `).join('');
         }
 
-        function saveSiteSettings() {
-            db.site.heroTitle = document.getElementById('edit-hero-title').value;
-            db.site.heroDesc = document.getElementById('edit-hero-desc').value;
-            saveDB();
-            renderSite();
-            alert("تم حفظ إعدادات الموقع بنجاح!");
+        function removeArrayItem(key, index) { db[key].splice(index, 1); renderArray(key, getFieldsForKey(key)); }
+        function addArrayItem(key) {
+            let newItem = {};
+            if(key === 'slider') newItem = {img:"", title:{ar:"",fr:""}, desc:{ar:"",fr:""}};
+            if(key === 'services') newItem = {icon:"fa-star", title:{ar:"",fr:""}, desc:{ar:"",fr:""}};
+            if(key === 'portfolio') newItem = {img:"", title:{ar:"",fr:""}, desc:{ar:"",fr:""}};
+            if(key === 'projects') newItem = {img:"", title:{ar:"",fr:""}, tag:{ar:"",fr:""}, desc:{ar:"",fr:""}};
+            db[key].push(newItem);
+            renderArray(key, getFieldsForKey(key));
+        }
+        function getFieldsForKey(key) {
+            if(key==='slider') return['img', 'title.ar', 'title.fr', 'desc.ar', 'desc.fr'];
+            if(key==='services') return['icon', 'title.ar', 'title.fr', 'desc.ar', 'desc.fr'];
+            if(key==='portfolio') return['img', 'title.ar', 'title.fr', 'desc.ar', 'desc.fr'];
+            if(key==='projects') return['img', 'title.ar', 'title.fr', 'tag.ar', 'tag.fr', 'desc.ar', 'desc.fr'];
         }
 
-        // تصدير كـ CSV
-        function exportCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // لدعم العربية
-            csvContent += "الاسم,الهاتف,البريد,الولاية,الخدمة,الوصف\n";
-            db.requests.forEach(r => {
-                let row = `"${r.name}","${r.phone}","${r.email}","${r.wilaya}","${r.service}","${r.desc}"`;
-                csvContent += row + "\n";
+        function saveArray(key) {
+            let inputs = document.querySelectorAll(`.${key}-input`);
+            inputs.forEach(inp => {
+                let idx = inp.getAttribute('data-idx');
+                let field = inp.getAttribute('data-field');
+                if(field.includes('.')) {
+                    db[key][idx][field.split('.')[0]][field.split('.')[1]] = inp.value;
+                } else { db[key][idx][field] = inp.value; }
             });
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "requests.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            saveDB(); alert("تم الحفظ بنجاح!");
+        }
+
+        function saveGeneral() {
+            db.settings.logo = document.getElementById('ad-logo1').value;
+            db.settings.logoSpan = document.getElementById('ad-logo2').value;
+            db.settings.phone = document.getElementById('ad-phone').value;
+            db.settings.email = document.getElementById('ad-email').value;
+            db.settings.map = document.getElementById('ad-map').value;
+            saveDB(); alert("تم حفظ الإعدادات!");
+        }
+
+        function saveAbout() {
+            db.about.title.ar = document.getElementById('ab-title-ar').value;
+            db.about.title.fr = document.getElementById('ab-title-fr').value;
+            db.about.text.ar = document.getElementById('ab-text-ar').value;
+            db.about.text.fr = document.getElementById('ab-text-fr').value;
+            db.about.img = document.getElementById('ab-img').value;
+            
+            db.about.stats.forEach((s,i) => {
+                s.icon = document.getElementById(`st-icon-${i}`).value;
+                s.num = document.getElementById(`st-num-${i}`).value;
+                s.text.ar = document.getElementById(`st-ar-${i}`).value;
+                s.text.fr = document.getElementById(`st-fr-${i}`).value;
+            });
+            saveDB(); alert("تم حفظ من نحن!");
+        }
+
+        function savePartners() {
+            db.partners = document.getElementById('ad-partners').value.split('\n').filter(l => l.trim() !== '');
+            saveDB(); alert("تم حفظ الشركاء!");
+        }
+
+        function delReq(index) { if(confirm("حذف الطلب؟")) { db.inbox.requests.splice(index, 1); saveDB(); buildAdminUI(); switchTab('inbox'); } }
+
+        function exportImportDB() {
+            let action = prompt("اكتب 'export' لتحميل نسخة من الموقع، أو الصق الكود هنا لاسترجاع نسخة سابقة:");
+            if(action === 'export') {
+                prompt("انسخ هذا الكود واحتفظ به في مكان آمن:", JSON.stringify(db));
+            } else if (action && action.length > 100) {
+                try { db = JSON.parse(action); saveDB(); alert("تم الاسترجاع بنجاح!"); window.location.reload(); } 
+                catch(e) { alert("كود غير صالح!"); }
+            }
         }
     </script>
 </body>
