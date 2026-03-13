@@ -11,11 +11,11 @@
     
     <style>
         :root {
-            --primary: #0a2540; 
-            --secondary: #d4af37; 
-            --bg-color: #f8f9fa;
-            --text-color: #333;
-            --white: #ffffff;
+            --primary: #006233; /* الأخضر الاحترافي */
+            --secondary: #D21034; /* الأحمر الجذاب */
+            --bg-color: #f8f9fa; /* أبيض مائل للرمادي لراحة العين في الخلفيات */
+            --text-color: #333333; /* رمادي داكن للنصوص */
+            --white: #ffffff; /* أبيض ناصع */
             --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
@@ -31,21 +31,22 @@
 
         /* الأزرار */
         .btn-glow {
-            background: var(--secondary); color: var(--primary); font-weight: bold; font-size: 1.2rem;
+            background: var(--secondary); color: var(--white); font-weight: bold; font-size: 1.2rem;
             padding: 15px 40px; border: none; border-radius: 30px; cursor: pointer;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); transition: var(--transition);
+            box-shadow: 0 0 15px rgba(210, 16, 52, 0.4); transition: var(--transition);
         }
-        .btn-glow:hover { box-shadow: 0 0 25px rgba(212, 175, 55, 0.9); transform: translateY(-3px) scale(1.05); }
+        .btn-glow:hover { box-shadow: 0 0 25px rgba(210, 16, 52, 0.8); transform: translateY(-3px) scale(1.05); }
 
-        /* شريط التنقل */
-        header { background: rgba(10, 37, 64, 0.95); backdrop-filter: blur(10px); color: var(--white); position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* شريط التنقل (Header) - باللون الأبيض ليكون احترافياً */
+        header { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); color: var(--primary); position: fixed; width: 100%; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; max-width: 1200px; margin: auto; }
-        .logo { font-size: 1.8rem; font-weight: 900; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px;}
-        .logo span { color: var(--white); font-weight: 300;}
-        .nav-links { display: flex; gap: 20px; align-items: center;}
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 1px;}
+        .logo span { color: var(--secondary); font-weight: 700;}
+        .nav-links { display: flex; gap: 20px; align-items: center; font-weight: 600;}
+        .nav-links a { color: var(--text-color); transition: 0.3s; }
         .nav-links a:hover { color: var(--secondary); }
-        .lang-btn { background: transparent; border: 1px solid var(--secondary); color: var(--secondary); padding: 5px 15px; border-radius: 20px; cursor: pointer; transition: 0.3s;}
-        .lang-btn:hover { background: var(--secondary); color: var(--primary); }
+        .lang-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 5px 15px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: bold;}
+        .lang-btn:hover { background: var(--primary); color: var(--white); }
 
         /* ====== السلايدر السينمائي (Hero) ====== */
         .hero { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--white); overflow: hidden; margin-top: 0; }
@@ -54,12 +55,13 @@
         .slide.active { opacity: 1; z-index: 1; }
         .slide-bg { width: 100%; height: 100%; background-size: cover; background-position: center; transform: scale(1.1); transition: transform 6s linear; }
         .slide.active .slide-bg { transform: scale(1); } /* تأثير الزووم البطيء */
-        .hero-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(10, 37, 64, 0.7); z-index: 1;}
+        /* غطاء داكن فوق الصورة لكي تظهر النصوص البيضاء بوضوح */
+        .hero-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0, 40, 20, 0.6); z-index: 1;}
         .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 20px; opacity: 0; transform: translateY(30px); transition: all 1s ease 0.5s;}
         .slide.active + .hero-overlay + .hero-content, .hero-content.show { opacity: 1; transform: translateY(0); }
         
         .hero h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); font-weight: 900;}
-        .hero p { font-size: 1.5rem; margin-bottom: 40px; font-weight: 300; }
+        .hero p { font-size: 1.5rem; margin-bottom: 40px; font-weight: 300; text-shadow: 1px 1px 5px rgba(0,0,0,0.5); }
 
         /* البطاقات العامة */
         .grid-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
@@ -78,7 +80,7 @@
         .img-card:hover img { transform: scale(1.05); }
         .card-info { padding: 25px; }
         .card-info h4 { color: var(--primary); font-size: 1.3rem; margin-bottom: 10px;}
-        .badge { background: rgba(212, 175, 55, 0.1); color: var(--secondary); padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold;}
+        .badge { background: rgba(210, 16, 52, 0.1); color: var(--secondary); padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold;}
 
         /* الشركاء */
         .partners-wrap { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; align-items: center;}
@@ -86,7 +88,7 @@
         .partner-logo:hover { filter: grayscale(0%); transform: scale(1.05); }
         .partner-logo img { max-width: 100%; max-height: 100%; object-fit: contain;}
 
-        /* الإحصائيات */
+        /* الإحصائيات (الأخضر والأبيض) */
         .stats-section { background: var(--primary); color: var(--white); text-align: center; padding: 60px 0;}
         .stat-box i { font-size: 3rem; color: var(--secondary); margin-bottom: 15px; }
         .stat-box h2 { font-size: 3.5rem; font-weight: 900; margin-bottom: 5px;}
@@ -98,10 +100,10 @@
         .form-control { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; transition: 0.3s; background: #fafafa;}
         .form-control:focus { border-color: var(--secondary); outline: none; background: #fff;}
         .submit-btn { background: var(--primary); color: white; border: none; padding: 15px 20px; width: 100%; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: 0.3s; font-weight: bold;}
-        .submit-btn:hover { background: var(--secondary); color: var(--primary); }
+        .submit-btn:hover { background: var(--secondary); color: var(--white); }
 
-        /* الفوتر */
-        footer { background: #051626; color: white; padding: 50px 0 20px; text-align: center; border-top: 5px solid var(--secondary);}
+        /* الفوتر (أخضر داكن مع خط أحمر) */
+        footer { background: #012b17; color: white; padding: 50px 0 20px; text-align: center; border-top: 5px solid var(--secondary);}
         .socials i { font-size: 1.5rem; margin: 0 10px; cursor: pointer; transition: 0.3s; color: #aaa;}
         .socials i:hover { color: var(--secondary); }
 
@@ -112,8 +114,9 @@
         .admin-layout { display: flex; height: 100vh; }
         .sidebar { width: 280px; background: var(--primary); color: white; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10;}
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px;}
+        .sidebar-header h3 { color: var(--white); }
         .sidebar a { display: block; padding: 15px 25px; color: #ccc; cursor: pointer; border-left: 4px solid transparent; transition: 0.3s;}
-        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.05); color: white; border-left: 4px solid var(--secondary); }
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid var(--secondary); }
         .sidebar a i { margin-right: 10px; margin-left: 10px; width: 20px; text-align: center;}
         
         .admin-content { flex: 1; padding: 30px; overflow-y: auto; }
@@ -130,10 +133,10 @@
         html[dir="ltr"] th, html[dir="ltr"] td { text-align: left; }
         th { background-color: #f8f9fa; color: var(--primary); }
         .action-btn { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; color: white; font-size: 0.8rem; margin: 2px;}
-        .btn-del { background: #e74c3c; } .btn-edit { background: #3498db; } .btn-add { background: #2ecc71; margin-bottom: 15px; display: inline-block;}
+        .btn-del { background: var(--secondary); } .btn-edit { background: #3498db; } .btn-add { background: var(--primary); margin-bottom: 15px; display: inline-block;}
         
         .item-box { background: #f8f9fa; border: 1px solid #eee; padding: 20px; border-radius: 8px; margin-bottom: 15px; position: relative;}
-        .remove-item { position: absolute; top: 10px; left: 10px; background: #e74c3c; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;}
+        .remove-item { position: absolute; top: 10px; left: 10px; background: var(--secondary); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;}
         html[dir="ltr"] .remove-item { left: auto; right: 10px; }
 
         /* Modal العام للاستشارة */
@@ -171,7 +174,8 @@
                 </ul>
                 <div style="display:flex; gap:10px;">
                     <button class="lang-btn" onclick="toggleLanguage()" id="lang-toggle">FR</button>
-                    <a href="#admin" class="lang-btn" style="border-color:#333; color:#fff;" title="Admin"><i class="fa-solid fa-lock"></i></a>
+                    <!-- أيقونة الدخول للإدارة -->
+                    <a href="#admin" class="lang-btn" style="border-color:var(--secondary); color:var(--secondary);" title="Admin"><i class="fa-solid fa-lock"></i></a>
                 </div>
             </nav>
         </header>
@@ -258,14 +262,14 @@
         <!-- Footer -->
         <footer>
             <div class="container">
-                <h3 id="footer-logo" style="margin-bottom:15px; color:var(--secondary); text-transform:uppercase;"></h3>
+                <h3 id="footer-logo" style="margin-bottom:15px; color:var(--white); text-transform:uppercase;"></h3>
                 <div class="socials">
                     <i class="fa-brands fa-facebook"></i>
                     <i class="fa-brands fa-linkedin"></i>
                     <i class="fa-brands fa-instagram"></i>
                     <i class="fa-brands fa-x-twitter"></i>
                 </div>
-                <p style="margin-top:20px; font-size:0.9rem; color:#888;">&copy; <span id="current-year"></span> Aitchikh Consulting. All Rights Reserved.</p>
+                <p style="margin-top:20px; font-size:0.9rem; color:#ccc;">&copy; <span id="current-year"></span> Aitchikh Consulting. All Rights Reserved.</p>
             </div>
         </footer>
 
@@ -310,7 +314,7 @@
         <div class="admin-layout">
             <div class="sidebar">
                 <div class="sidebar-header">
-                    <h3 style="color:var(--secondary);">Aitchikh CMS</h3>
+                    <h3>Aitchikh CMS</h3>
                     <small>Super Admin</small>
                 </div>
                 <a class="active" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-line"></i> الإحصائيات</a>
@@ -322,7 +326,7 @@
                 <a onclick="switchTab('about')"><i class="fa-solid fa-address-card"></i> من نحن والأرقام</a>
                 <a onclick="switchTab('partners')"><i class="fa-solid fa-handshake"></i> الشركاء</a>
                 <a onclick="exportImportDB()"><i class="fa-solid fa-database"></i> نسخ احتياطي</a>
-                <a href="#" onclick="logoutAdmin()" style="margin-top:auto; background:#c0392b; color:white;"><i class="fa-solid fa-power-off"></i> خروج</a>
+                <a href="#" onclick="logoutAdmin()" style="margin-top:auto; background:var(--secondary); color:white;"><i class="fa-solid fa-power-off"></i> خروج</a>
             </div>
             
             <div class="admin-content" id="admin-content-area">
@@ -446,7 +450,7 @@
         function renderSite() {
             // General Settings
             document.getElementById('site-logo').innerHTML = `${db.settings.logo}<span>${db.settings.logoSpan}</span>`;
-            document.getElementById('footer-logo').textContent = `${db.settings.logo} ${db.settings.logoSpan}`;
+            document.getElementById('footer-logo').innerHTML = `${db.settings.logo} <span style="color:var(--secondary);">${db.settings.logoSpan}</span>`;
             document.getElementById('info-phone').textContent = db.settings.phone;
             document.getElementById('info-email').textContent = db.settings.email;
             document.getElementById('contact-map').src = db.settings.map;
